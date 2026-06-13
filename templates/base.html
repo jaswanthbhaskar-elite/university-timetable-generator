@@ -1,0 +1,74 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UniSchedule | Academic Timetable Manager</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/app.js" defer></script>
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand-block">
+                <div class="brand-logo">US</div>
+                <div>
+                    <div class="brand-title">UniSchedule</div>
+                    <div class="brand-tag">Campus timetable manager</div>
+                </div>
+            </div>
+            <nav class="nav-list">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                    {% if current_user.role == role_admin %}
+                        <a href="{{ url_for('manage_clusters') }}">Clusters</a>
+                        <a href="{{ url_for('manage_sections') }}">Sections</a>
+                        <a href="{{ url_for('manage_faculty') }}">Faculty</a>
+                        <a href="{{ url_for('manage_subjects') }}">Subjects</a>
+                        <a href="{{ url_for('manage_students') }}">Students</a>
+                        <a href="{{ url_for('manage_users') }}">Users</a>
+                        <a href="{{ url_for('settings_page') }}">Settings</a>
+                    {% elif current_user.role == role_student %}
+                        <a href="{{ url_for('student_portal') }}">Student Portal</a>
+                        <a href="{{ url_for('choose_section') }}">Choose Section</a>
+                        <a href="{{ url_for('choose_subjects') }}">Choose Subjects</a>
+                    {% endif %}
+                    <a href="{{ url_for('view_timetables') }}">Timetables</a>
+                    <a href="{{ url_for('profile') }}">Profile</a>
+                    <a href="{{ url_for('logout') }}" class="danger-link">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('register') }}">Register</a>
+                {% endif %}
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-left">
+                    <h1>UniSchedule Control Panel</h1>
+                    <p>Manage campus timetables, faculty preferences, clusters and schedules from a single dashboard.</p>
+                </div>
+                {% if current_user.is_authenticated %}
+                <div class="header-user">
+                    <span>{{ current_user.username }}</span>
+                    <span class="user-role">{{ current_user.role }}</span>
+                </div>
+                {% endif %}
+            </header>
+
+            <div class="content-area">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-stack">
+                        {% for category, message in messages %}
+                            <div class="flash-item flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+</body>
+</html>

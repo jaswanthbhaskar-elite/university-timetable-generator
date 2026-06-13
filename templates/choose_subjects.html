@@ -1,0 +1,30 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Select Your Subjects</h2>
+            <p>Pick the subjects you want to take for the selected section.</p>
+        </div>
+    </div>
+    {% if student and student.section %}
+    <p class="muted">Current section: {{ student.section_name() }} / Cluster: {{ student.cluster_name() }}</p>
+    {% endif %}
+    {% if fallback_message %}
+    <p class="muted">{{ fallback_message }}</p>
+    {% endif %}
+    <form method="post" class="form-panel">
+        <div class="form-row">
+            <label>Choose subjects</label>
+            <select name="subject_ids" multiple size="10">
+                {% for subject in subject_choices %}
+                <option value="{{ subject.id }}" {% if student and subject in student.subjects %}selected{% endif %}>
+                    {{ subject.code }} - {{ subject.name }} ({{ subject.type_label() }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button class="primary">Save selections</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="panel">
+    <h2>System Settings</h2>
+    <form method="post">
+        <div class="form-row"><label>Days per Week</label><input type="number" name="days_per_week" min="3" max="5" value="{{ settings.days_per_week }}" required></div>
+        <div class="form-row"><label>Periods per Day</label><input type="number" name="periods_per_day" min="4" max="10" value="{{ settings.periods_per_day }}" required></div>
+        <div class="form-row"><label>Free Hours per Week</label><input type="number" name="free_hours_per_week" min="0" max="10" value="{{ settings.free_hours_per_week }}" required></div>
+        <button class="primary">Save Settings</button>
+    </form>
+</div>
+{% endblock %}

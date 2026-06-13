@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="panel">
+    <h2>Section Timetables</h2>
+    <table>
+        <thead><tr><th>Section</th><th>Cluster</th><th>View</th></tr></thead>
+        <tbody>
+        {% for section in sections %}
+            <tr>
+                <td>{{ section.name }}</td>
+                <td>{{ section.cluster.name if section.cluster else 'N/A' }}</td>
+                <td><a class="primary" href="{{ url_for('view_timetable', section_id=section.id) }}">View</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

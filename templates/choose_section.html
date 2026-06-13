@@ -1,0 +1,52 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Choose a Section</h2>
+            <p>Pick the cluster and section that best suits your schedule and faculty preferences.</p>
+        </div>
+    </div>
+    <form method="post" class="form-panel">
+        <div class="form-grid">
+            <div>
+                <label>Choose Cluster</label>
+                <select id="clusterSelect" name="cluster_id" required>
+                    <option value="">Select Cluster</option>
+                    {% for cluster in clusters %}
+                    <option value="{{ cluster.id }}">{{ cluster.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label>Choose Section</label>
+                <select id="sectionSelect" name="section_id" required>
+                    <option value="">Select section</option>
+                    {% for cluster in clusters %}
+                        {% for section in cluster.sections %}
+                        <option value="{{ section.id }}" data-cluster="{{ cluster.id }}">{{ section.name }}</option>
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <button class="button primary">Assign Section</button>
+    </form>
+    <script>
+        const clusterSelect = document.getElementById('clusterSelect');
+        const sectionSelect = document.getElementById('sectionSelect');
+        const sectionOptions = Array.from(sectionSelect.querySelectorAll('option[data-cluster]'));
+
+        function filterSections() {
+            const clusterId = clusterSelect.value;
+            sectionSelect.value = '';
+            sectionOptions.forEach(option => {
+                option.hidden = clusterId ? option.dataset.cluster !== clusterId : false;
+                option.disabled = clusterId ? option.dataset.cluster !== clusterId : false;
+            });
+        }
+
+        clusterSelect.addEventListener('change', filterSections);
+    </script>
+</div>
+{% endblock %}

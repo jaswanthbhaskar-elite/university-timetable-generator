@@ -1,0 +1,68 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Faculty Portal</h2>
+            <p>Review your subject assignments and timetable availability.</p>
+        </div>
+    </div>
+    <div class="info-row">
+        <div><strong>Name</strong><p>{{ instructor.name if instructor else 'Unknown' }}</p></div>
+        <div><strong>Max classes/day</strong><p>{{ instructor.max_classes_per_day if instructor else 'N/A' }}</p></div>
+        <div><strong>Preferences</strong><p>
+            {% if instructor.prefer_morning %}Morning {% endif %}
+            {% if instructor.prefer_afternoon %}Afternoon {% endif %}
+            {% if instructor.avoid_first_period %}Avoid 1st{% endif %}
+            {% if instructor.avoid_last_period %} Avoid last{% endif %}
+            {% if instructor.avoid_friday %} Avoid Fri{% endif %}
+        </p></div>
+    </div>
+</div>
+
+<div class="panel">
+    <h3>Your assigned subjects</h3>
+    {% if assigned_subjects %}
+    <table>
+        <thead><tr><th>Subject</th><th>Assigned Sections</th><th>Type</th></tr></thead>
+        <tbody>
+            {% for subject in assigned_subjects %}
+            <tr>
+                <td>{{ subject.name }}</td>
+                <td>{{ subject.sections|map(attribute='name')|join(', ') }}</td>
+                <td>{{ subject.type_label() }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="muted">No assigned subjects yet. Contact administration to be assigned.</p>
+    {% endif %}
+</div>
+
+<div class="panel">
+    <h3>Your timetable summary</h3>
+    {% if timetables %}
+        {% for section_name, entries in timetables %}
+        <div class="panel small-panel">
+            <h4>{{ section_name }}</h4>
+            <table>
+                <thead><tr><th>Day</th><th>Period</th><th>Subject</th><th>Section</th></tr></thead>
+                <tbody>
+                    {% for entry in entries %}
+                        <tr>
+                            <td>{{ entry.day }}</td>
+                            <td>{{ entry.period }}</td>
+                            <td>{{ entry.subject.name if entry.subject else 'Free' }}</td>
+                            <td>{{ entry.section.name }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endfor %}
+    {% else %}
+    <p class="muted">No timetable entries available yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

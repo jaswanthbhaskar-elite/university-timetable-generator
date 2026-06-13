@@ -1,0 +1,52 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Student Portal</h2>
+            <p>Manage your section membership and subject selections from one place.</p>
+        </div>
+    </div>
+    <div class="info-row">
+        <div><strong>Name</strong><p>{{ student.name if student else 'Unknown' }}</p></div>
+        <div><strong>Roll No.</strong><p>{{ student.roll_number if student else 'N/A' }}</p></div>
+        <div><strong>Section</strong><p>{{ student.section_name() if student else 'N/A' }}</p></div>
+        <div><strong>Cluster</strong><p>{{ student.cluster_name() if student else 'N/A' }}</p></div>
+    </div>
+</div>
+
+<div class="panel grid-panel">
+    <div>
+        <h3>Actions</h3>
+        <div class="action-grid">
+            <a class="primary" href="{{ url_for('choose_section') }}">Choose Section</a>
+            <a class="primary" href="{{ url_for('choose_subjects') }}">Choose Subjects</a>
+        </div>
+        {% if student and not student.section %}
+        <p class="help-text">You don't have a section yet. Select one before choosing subjects.</p>
+        {% elif student and not selected_subjects %}
+        <p class="help-text">You have not selected any subjects yet. Save your choices now.</p>
+        {% endif %}
+    </div>
+    <div>
+        <h3>Your subject selections</h3>
+        {% if selected_subjects %}
+        <table>
+            <thead><tr><th>Code</th><th>Subject</th><th>Faculty</th><th>Type</th></tr></thead>
+            <tbody>
+                {% for subject in selected_subjects %}
+                <tr>
+                    <td>{{ subject.code }}</td>
+                    <td>{{ subject.name }}</td>
+                    <td>{{ subject.faculty.name if subject.faculty else 'Not assigned' }}</td>
+                    <td>{{ subject.type_label() }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="muted">No subjects selected yet. Use the button to choose your subjects.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

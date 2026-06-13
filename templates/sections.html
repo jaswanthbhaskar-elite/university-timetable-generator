@@ -1,0 +1,97 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Section Management</h2>
+            <p>Create new sections, move them between clusters, and assign them subjects.</p>
+        </div>
+    </div>
+    <form method="post" class="form-panel">
+        <div class="form-row">
+            <label>Section Name</label>
+            <input type="text" name="section_name" placeholder="Example: A1" required>
+        </div>
+        <div class="form-row">
+            <label>Select Cluster</label>
+            <select name="cluster_id" required>
+                <option value="">Pick a cluster</option>
+                {% for cluster in clusters %}
+                <option value="{{ cluster.id }}">{{ cluster.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button class="primary" name="action" value="create_section">Create Section</button>
+    </form>
+</div>
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h3>Move Section</h3>
+        </div>
+    </div>
+    <form method="post" class="form-panel">
+        <div class="form-row">
+            <label>Section</label>
+            <select name="section_id" required>
+                {% for section in sections %}
+                <option value="{{ section.id }}">{{ section.name }} ({{ section.cluster_name() }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-row">
+            <label>Target Cluster</label>
+            <select name="cluster_id" required>
+                {% for cluster in clusters %}
+                <option value="{{ cluster.id }}">{{ cluster.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button class="primary" name="action" value="move_section">Move Section</button>
+    </form>
+</div>
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h3>Assign Subjects</h3>
+        </div>
+    </div>
+    <form method="post" class="form-panel">
+        <div class="form-row">
+            <label>Section</label>
+            <select name="section_id" required>
+                {% for section in sections %}
+                <option value="{{ section.id }}">{{ section.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-row">
+            <label>Subjects</label>
+            <select name="subject_ids" multiple size="8">
+                {% for subject in subjects %}
+                <option value="{{ subject.id }}">{{ subject.code }} - {{ subject.name }} ({{ subject.type_label() }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button class="primary" name="action" value="assign_subjects">Assign Subjects</button>
+    </form>
+</div>
+<div class="panel">
+    <h3>Sections Overview</h3>
+    <table>
+        <thead>
+            <tr><th>Section</th><th>Cluster</th><th>Subjects</th><th>Students</th></tr>
+        </thead>
+        <tbody>
+            {% for section in sections %}
+            <tr>
+                <td>{{ section.name }}</td>
+                <td>{{ section.cluster_name() }}</td>
+                <td>{{ section.subjects|length }}</td>
+                <td>{{ section.students|length }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

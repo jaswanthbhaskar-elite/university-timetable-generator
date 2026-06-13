@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="panel auth-panel">
+    <h1>Register</h1>
+    <form method="post" action="{{ url_for('register') }}">
+        <label>Username</label>
+        <input type="text" name="username" required>
+        <label>Password</label>
+        <input type="password" name="password" required>
+        <label>Role</label>
+        <select name="role" required>
+            <option value="STUDENT">Student</option>
+            <option value="ADMIN">Admin</option>
+        </select>
+        <button type="submit" class="primary">Create account</button>
+    </form>
+    <div class="auth-footer">
+        <span>Already have an account?</span> <a href="{{ url_for('login') }}">Login</a>
+    </div>
+</div>
+{% endblock %}

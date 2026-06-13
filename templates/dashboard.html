@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="dashboard-grid">
+    <div class="card">
+        <h3>Clusters</h3>
+        <p>{{ stats.clusters }}</p>
+    </div>
+    <div class="card">
+        <h3>Sections</h3>
+        <p>{{ stats.sections }}</p>
+    </div>
+    <div class="card">
+        <h3>Faculty</h3>
+        <p>{{ stats.faculty }}</p>
+    </div>
+    <div class="card">
+        <h3>Subjects</h3>
+        <p>{{ stats.subjects }}</p>
+    </div>
+    <div class="card">
+        <h3>Students</h3>
+        <p>{{ stats.students }}</p>
+    </div>
+    <div class="card">
+        <h3>Timetable Entries</h3>
+        <p>{{ stats.timetables }}</p>
+    </div>
+</div>
+<div class="panel grid-panel">
+    <div>
+        <div class="panel-header">
+            <div>
+                <h2>Quick Actions</h2>
+                <p>Run timetable workflows and clear old schedules from one place.</p>
+            </div>
+        </div>
+        {% if current_user.role == 'ADMIN' %}
+        <div class="action-grid">
+            <form method="post" action="{{ url_for('generate_timetable') }}">
+                <button type="submit" class="primary">Generate Timetables</button>
+            </form>
+            <form method="post" action="{{ url_for('generate_timetable') }}">
+                <button type="submit" name="shuffle" value="1" class="secondary">Shuffle & Generate</button>
+            </form>
+            <form method="post" action="{{ url_for('clear_timetables') }}">
+                <button type="submit" class="secondary">Clear Timetable Data</button>
+            </form>
+            <a class="primary" href="{{ url_for('view_timetables') }}">View Timetables</a>
+        </div>
+        {% endif %}
+    </div>
+    <div>
+        <div class="panel-header">
+            <div>
+                <h2>Pending Checks</h2>
+                <p>Items that need attention before a clean timetable run.</p>
+            </div>
+        </div>
+        <div class="status-grid">
+            <div class="badge"><span>Unassigned students</span><strong>{{ pending.unassigned_students }}</strong></div>
+            <div class="badge"><span>Sections missing subjects</span><strong>{{ pending.sections_without_subjects }}</strong></div>
+            <div class="badge"><span>Unassigned subjects</span><strong>{{ pending.subjects_unassigned }}</strong></div>
+        </div>
+        <p class="help-text">Add missing assignments before generating the timetable for the best result.</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<div class="panel profile-panel">
+    <h2>Profile Overview</h2>
+    <div class="profile-grid">
+        <div><strong>Username</strong><p>{{ user.username }}</p></div>
+        <div><strong>Role</strong><p>{{ user.role }}</p></div>
+        {% if student %}
+        <div><strong>Roll Number</strong><p>{{ student.roll_number }}</p></div>
+        <div><strong>Section</strong><p>{{ student.section_name() }}</p></div>
+        <div><strong>Cluster</strong><p>{{ student.cluster_name() }}</p></div>
+        {% endif %}
+    </div>
+    <p class="profile-note">Use the links on the left to access your role-specific controls, choose your section, and select your subjects.</p>
+</div>
+{% endblock %}

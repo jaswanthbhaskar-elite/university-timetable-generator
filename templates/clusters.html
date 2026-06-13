@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Cluster Management</h2>
+            <p>Create clusters and automatically generate sections for each cluster.</p>
+        </div>
+    </div>
+    <form method="post" class="form-panel">
+        <div class="form-row">
+            <label>Cluster Name</label>
+            <input type="text" name="name" placeholder="Example: A" required>
+        </div>
+        <div class="form-row">
+            <label>Number of Sections</label>
+            <input type="number" name="sections_count" min="1" value="2" required>
+        </div>
+        <button class="primary">Create Cluster</button>
+    </form>
+</div>
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Existing Clusters</h2>
+            <p>Review cluster size and section names at a glance.</p>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Cluster</th>
+                <th>Sections</th>
+                <th>Section Names</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cluster in clusters %}
+            <tr>
+                <td>{{ cluster.name }}</td>
+                <td>{{ cluster.sections|length }}</td>
+                <td>{{ cluster.sections|map(attribute='name')|join(', ') }}</td>
+                <td><a class="danger" href="{{ url_for('delete_cluster', cluster_id=cluster.id) }}">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

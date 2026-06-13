@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Subject Catalog</h2>
+            <p>Add subjects with code, credits, and faculty assignment.</p>
+        </div>
+    </div>
+    <form method="post" class="form-panel">
+        <div class="form-grid">
+            <div>
+                <label>Code</label>
+                <input type="text" name="code" placeholder="CSE101" required>
+            </div>
+            <div>
+                <label>Name</label>
+                <input type="text" name="name" placeholder="Programming Fundamentals" required>
+            </div>
+            <div>
+                <label>Hours / Week</label>
+                <input type="number" name="hours" min="1" value="3" required>
+            </div>
+            <div>
+                <label>Credits</label>
+                <input type="number" name="credits" min="0" value="0">
+            </div>
+            <div>
+                <label>Faculty</label>
+                <select name="faculty_id">
+                    <option value="">None / Unassigned</option>
+                    {% for faculty in faculties %}
+                    <option value="{{ faculty.id }}">{{ faculty.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="checkbox-row">
+                <label><input type="checkbox" name="is_lab"> Lab subject</label>
+            </div>
+        </div>
+        <button class="primary">Add Subject</button>
+    </form>
+</div>
+<div class="panel">
+    <h2>Subject Catalog</h2>
+    <table>
+        <thead><tr><th>Code</th><th>Name</th><th>Hours</th><th>Credits</th><th>Faculty</th><th>Type</th><th>Assigned Sections</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for subject in subjects %}
+            <tr>
+                <td>{{ subject.code }}</td>
+                <td>{{ subject.name }}</td>
+                <td>{{ subject.hours_per_week }}</td>
+                <td>{{ subject.credits }}</td>
+                <td>{{ subject.faculty.name if subject.faculty else 'Unassigned' }}</td>
+                <td>{{ subject.type_label() }}</td>
+                <td>{% if subject.sections %}{{ subject.sections | map(attribute='name') | join(', ') }}{% else %}Unassigned{% endif %}</td>
+                <td><a class="danger" href="{{ url_for('delete_subject', subject_id=subject.id) }}">Delete</a></td>
+            </tr>
+        {% else %}
+            <tr><td colspan="8">No subjects available yet.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Assign Subject to Sections</h2>
+            <p>Select a subject and choose the sections where it should be taught.</p>
+        </div>
+    </div>
+    <form method="post" class="form-panel">
+        <input type="hidden" name="action" value="assign_sections">
+        <div class="form-grid">
+            <div>
+                <label>Subject</label>
+                <select name="subject_id" required>
+                    <option value="">Select a subject</option>
+                    {% for subject in subjects %}
+                    <option value="{{ subject.id }}">{{ subject.code }} - {{ subject.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label>Sections</label>
+                <div class="checkbox-grid">
+                    {% for section in sections %}
+                    <label><input type="checkbox" name="section_ids" value="{{ section.id }}"> {{ section.name }} ({{ section.cluster.name if section.cluster else 'No cluster' }})</label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <button class="primary">Save Section Assignments</button>
+    </form>
+</div>
+{% endblock %}

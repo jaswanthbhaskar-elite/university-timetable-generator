@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Faculty Management</h2>
+            <p>Add faculty members and review their workload preferences.</p>
+        </div>
+    </div>
+    <form method="post" class="form-panel">
+        <div class="form-row">
+            <label>Name</label>
+            <input type="text" name="name" placeholder="Jane Doe" required>
+        </div>
+        <div class="form-grid">
+            <label><input type="checkbox" name="prefer_morning"> Prefer Morning</label>
+            <label><input type="checkbox" name="prefer_afternoon"> Prefer Afternoon</label>
+            <label><input type="checkbox" name="avoid_first_period"> Avoid First Period</label>
+            <label><input type="checkbox" name="avoid_last_period"> Avoid Last Period</label>
+            <label><input type="checkbox" name="avoid_friday"> Avoid Friday</label>
+            <label>Max Classes/Day<input type="number" name="max_classes_per_day" min="1" value="4"></label>
+        </div>
+        <button class="primary">Add Faculty</button>
+    </form>
+</div>
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Faculty List</h2>
+            <p>See subject assignments and availability in one place.</p>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr><th>Name</th><th>Subjects</th><th>Preferences</th><th>Max/Day</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+        {% for faculty in faculty_list %}
+            <tr>
+                <td>{{ faculty.name }}</td>
+                <td>{{ faculty.subjects|length }}</td>
+                <td>
+                    {% if faculty.prefer_morning %}Morning {% endif %}
+                    {% if faculty.prefer_afternoon %}Afternoon {% endif %}
+                    {% if faculty.avoid_first_period %}Avoid 1st {% endif %}
+                    {% if faculty.avoid_last_period %}Avoid Last {% endif %}
+                    {% if faculty.avoid_friday %}Avoid Friday{% endif %}
+                </td>
+                <td>{{ faculty.max_classes_per_day }}</td>
+                <td><a class="danger" href="{{ url_for('delete_faculty', faculty_id=faculty.id) }}">Delete</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

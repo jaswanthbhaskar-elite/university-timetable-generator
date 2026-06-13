@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="panel">
+    <div class="panel-header">
+        <div>
+            <h2>Timetable for {{ section.name }}</h2>
+            <p>Review the assigned subjects and faculty for every period.</p>
+        </div>
+    </div>
+    <table class="timetable-grid">
+        <thead>
+            <tr>
+                <th>Day / Period</th>
+                {% for period in range(1, settings.periods_per_day + 1) %}
+                <th>Period {{ period }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for day in ['Monday','Tuesday','Wednesday','Thursday','Friday'][:settings.days_per_week] %}
+            <tr>
+                <td class="day-cell">{{ day }}</td>
+                {% for period in range(1, settings.periods_per_day + 1) %}
+                    {% set entry = grid[day][period] %}
+                    {% if entry %}
+                        {% if entry.is_free %}
+                            <td class="free-cell">Free</td>
+                        {% else %}
+                            <td>
+                                <strong>{{ entry.subject.code }} {{ entry.subject.name }}</strong><br>
+                                <span class="muted">{{ entry.faculty.name if entry.faculty else 'Faculty unassigned' }}</span>
+                            </td>
+                        {% endif %}
+                    {% else %}
+                        <td class="empty-cell">-</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
